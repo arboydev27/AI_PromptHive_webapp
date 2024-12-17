@@ -9,13 +9,25 @@ const EditPrompt = () => {
 
     const router = useRouter();
     const searchParams = useSearchParams();
-    const promptId = searchParams.get('id');
+    //const promptId = searchParams.get('id');
+
+    const [promptId, setPromptId] = useState(null); // State to safely store promptId
+
 
     const [ submitting, setSubmitting ] = useState(false);
     const [ post, setPost ] = useState({
         prompt: '',
         tag: '',
     });
+
+    // Fetch promptId client-side using useEffect
+    useEffect(() => {
+        if (searchParams) {
+          const id = searchParams.get('id');
+          setPromptId(id);
+        }
+      }, [searchParams]);
+      
 
     useEffect(() => {
         const getPromptDetails = async () => {
