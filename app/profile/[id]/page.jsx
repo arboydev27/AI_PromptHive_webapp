@@ -37,25 +37,29 @@
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, use } from "react";
 import { useSearchParams } from "next/navigation";
 import Profile from "@components/Profile";
+
+export const dynamic = "force-dynamic"; // Prevents static rendering
 
 const UserProfileContent = ({ params }) => {
   const searchParams = useSearchParams();
   const userName = searchParams.get("name");
 
+  const { id } = use(params); // Unwrap the params Promise using React.use()
+
   const [userPosts, setUserPosts] = useState([]);
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${params?.id}/posts`);
+      const response = await fetch(`/api/users/${id}/posts`);
       const data = await response.json();
       setUserPosts(data);
     };
 
-    if (params?.id) fetchPosts();
-  }, [params.id]);
+    if (id) fetchPosts();
+  }, [id]);
 
   return (
     <Profile
@@ -73,3 +77,4 @@ export default function UserProfile(props) {
     </Suspense>
   );
 }
+
